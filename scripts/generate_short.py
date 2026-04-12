@@ -82,6 +82,7 @@ AUDIO_BUFFER_SECONDS = 0.5
 # YouTube
 YOUTUBE_CATEGORY_ID = "22"   # People & Blogs
 YOUTUBE_PRIVACY = "public"   # "public" | "private" | "unlisted"
+REQUIRED_YOUTUBE_CREDENTIALS = ("YOUTUBE_REFRESH_TOKEN", "YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET")
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -460,6 +461,13 @@ def compose_video(
 # ---------------------------------------------------------------------------
 
 
+def _prepare_youtube_title(title: str) -> str:
+    """Ensure the title has a #Shorts suffix and fits YouTube's 100-char limit."""
+    if "#Shorts" not in title:
+        title = f"{title} #Shorts"
+    return title[:100]
+
+
 def get_youtube_service():
     credentials = Credentials(
         token=None,
@@ -478,8 +486,7 @@ def upload_to_youtube(video_path: Path, content: dict) -> str:
 
     # Validate credentials up-front — raise a plain exception instead of sys.exit
     # so the caller can catch it and still write the log / keep the saved video.
-    missing = [v for v in ("YOUTUBE_REFRESH_TOKEN", "YOUTUBE_CLIENT_ID", "YOUTUBE_CLIENT_SECRET")
-               if not os.environ.get(v)]
+    missing = [v for v in REQUIRED_YOUTUBE_CREDENTIALS if not os.environ.get(v)]
     if missing:
         raise RuntimeError(
             f"YouTube credential(s) not set: {', '.join(missing)} — "
@@ -488,9 +495,7 @@ def upload_to_youtube(video_path: Path, content: dict) -> str:
 
     youtube = get_youtube_service()
 
-    title = content["title"]
-    if "#Shorts" not in title:
-        title = f"{title} #Shorts"
+    title = _prepare_youtube_title(content["title"])
 
     # Deduplicate tags; enforce YouTube's 500-char total limit
     all_tags = list(dict.fromkeys(
@@ -506,7 +511,7 @@ def upload_to_youtube(video_path: Path, content: dict) -> str:
 
     body = {
         "snippet": {
-            "title": title[:100],
+            "title": title,
             "description": content["description"][:5000],
             "tags": tags_trimmed,
             "categoryId": YOUTUBE_CATEGORY_ID,
@@ -619,12 +624,9 @@ def save_video_to_repo(video_path: Path, timestamp: str, content: dict) -> Path:
 
     # Save a companion metadata JSON so the video can be manually uploaded to YouTube
     meta_dest = videos_dir / f"{timestamp}.json"
-    title = content.get("title", "")
-    if "#Shorts" not in title:
-        title = f"{title} #Shorts"
     metadata = {
         "timestamp": timestamp,
-        "title": title[:100],
+        "title": _prepare_youtube_title(content.get("title", "")),
         "description": content.get("description", ""),
         "tags": content.get("tags", []),
         "script": content.get("script", ""),
