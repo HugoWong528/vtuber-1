@@ -306,6 +306,9 @@ const PARAM_GROUPS = [
   ]},
 ];
 
+// ── Config ──────────────────────────────────────────────────────────────────
+const MODEL_PATH = 'miku_sample_t04.model3.json';
+
 // ── State ───────────────────────────────────────────────────────────────────
 let app, model;
 let manualMode = false;
@@ -370,8 +373,9 @@ function syncSliders() {
           sl.value = v;
           vl.textContent = v.toFixed(2);
         }
-      } catch (_) {}
-    }
+      } catch (err) {
+        console.debug('Failed to sync parameter:', p.id, err);
+      }    }
   }
 }
 
@@ -397,7 +401,7 @@ async function init() {
   });
 
   try {
-    model = await PIXI.live2d.Live2DModel.from('miku_sample_t04.model3.json', {
+    model = await PIXI.live2d.Live2DModel.from(MODEL_PATH, {
       autoInteract: true,
     });
 
@@ -469,9 +473,10 @@ function toggleManual(enabled) {
 }
 
 function setBg(hex) {
-  // Convert hex to number
   const n = parseInt(hex.slice(1), 16);
-  app && app.renderer.backgroundColor !== undefined && (app.renderer.backgroundColor = n);
+  if (app && app.renderer.backgroundColor !== undefined) {
+    app.renderer.backgroundColor = n;
+  }
   document.getElementById('canvas-wrap').style.background = hex;
 }
 
