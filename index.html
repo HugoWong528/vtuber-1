@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miku VTuber Controller</title>
+
+  <!-- Load Cubism 4 Core first (required by pixi-live2d-display) -->
+  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+  <!-- PIXI.js v6 -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6/dist/browser/pixi.min.js"></script>
+  <!-- pixi-live2d-display -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    /* ── Canvas area ─────────────────────────────────── */
+    #canvas-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    #canvas-wrap canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    #status {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.6);
+      color: #58a6ff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+
+    /* ── Side panel ──────────────────────────────────── */
+    #panel {
+      width: 290px;
+      min-width: 290px;
+      background: #161b22;
+      border-left: 1px solid #30363d;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #panel-header {
+      padding: 14px 16px 10px;
+      background: #21262d;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #panel-header h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f0f6fc;
+      flex: 1;
+    }
+    #panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px;
+      scrollbar-width: thin;
+      scrollbar-color: #30363d #161b22;
+    }
+
+    /* ── Sections ────────────────────────────────────── */
+    .section {
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #8b949e;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #21262d;
+    }
+
+    /* ── Buttons ─────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+    button {
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background .15s, border-color .15s;
+    }
+    button:hover { background: #30363d; border-color: #58a6ff; color: #58a6ff; }
+    button.active { background: #1f6feb; border-color: #388bfd; color: #fff; }
+
+    /* ── Sliders ─────────────────────────────────────── */
+    .param-row {
+      display: grid;
+      grid-template-columns: 110px 1fr 38px;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 7px;
+    }
+    .param-row label {
+      font-size: 11px;
+      color: #c9d1d9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    input[type=range] {
+      width: 100%;
+      accent-color: #58a6ff;
+      cursor: pointer;
+    }
+    .param-val {
+      font-size: 11px;
+      color: #8b949e;
+      text-align: right;
+      min-width: 30px;
+    }
+
+    /* ── Toggle / color ──────────────────────────────── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .toggle-row label { color: #c9d1d9; font-size: 12px; }
+    input[type=checkbox] { accent-color: #58a6ff; width: 16px; height: 16px; cursor: pointer; }
+    input[type=color] { border: none; background: none; width: 30px; height: 24px; cursor: pointer; padding: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ── Canvas ─────────────────────────────────────────── -->
+<div id="canvas-wrap">
+  <canvas id="canvas"></canvas>
+  <div id="status">Loading model…</div>
+</div>
+
+<!-- ── Controller Panel ───────────────────────────────── -->
+<div id="panel">
+  <div id="panel-header">
+    <span>🎮</span>
+    <h1>VTuber Controller</h1>
+  </div>
+
+  <div id="panel-body">
+
+    <!-- Settings -->
+    <div class="section">
+      <div class="section-title">Settings</div>
+
+      <div class="toggle-row">
+        <label>Mouse Tracking</label>
+        <input type="checkbox" id="chk-track" checked onchange="toggleTracking(this.checked)" />
+      </div>
+
+      <div class="toggle-row">
+        <label>Manual Params</label>
+        <input type="checkbox" id="chk-manual" onchange="toggleManual(this.checked)" />
+      </div>
+
+      <div class="toggle-row">
+        <label>Background</label>
+        <input type="color" id="bg-color" value="#0d1117" oninput="setBg(this.value)" />
+      </div>
+
+      <div class="param-row" style="grid-template-columns:110px 1fr 38px">
+        <label>Scale</label>
+        <input type="range" id="sl-scale" min="0.2" max="2.0" step="0.01" value="1.0" oninput="setScale(this.value)" />
+        <span class="param-val" id="val-scale">1.00</span>
+      </div>
+    </div>
+
+    <!-- Motions -->
+    <div class="section">
+      <div class="section-title">Motions</div>
+      <div class="btn-row">
+        <button onclick="playMotion('Idle',0)">Idle 1</button>
+        <button onclick="playMotion('Idle',1)">Idle 2</button>
+        <button onclick="playMotion('Idle',2)">Idle 3</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="playMotion('Tap',0)">Tap 1</button>
+        <button onclick="playMotion('Tap',1)">Tap 2</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="playMotion('Flick',0)">Flick 1</button>
+        <button onclick="playMotion('Flick',1)">Flick 2</button>
+        <button onclick="playMotion('FlickUp',0)">Flick Up</button>
+      </div>
+      <div class="btn-row">
+        <button onclick="stopMotion()">⏹ Stop</button>
+      </div>
+    </div>
+
+    <!-- Head -->
+    <div class="section">
+      <div class="section-title">Head</div>
+      <div id="params-head"></div>
+    </div>
+
+    <!-- Eyes -->
+    <div class="section">
+      <div class="section-title">Eyes</div>
+      <div id="params-eyes"></div>
+    </div>
+
+    <!-- Eyebrows -->
+    <div class="section">
+      <div class="section-title">Eyebrows</div>
+      <div id="params-brow"></div>
+    </div>
+
+    <!-- Mouth -->
+    <div class="section">
+      <div class="section-title">Mouth</div>
+      <div id="params-mouth"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="section">
+      <div class="section-title">Body</div>
+      <div id="params-body"></div>
+    </div>
+
+    <!-- Hair / Sway -->
+    <div class="section">
+      <div class="section-title">Hair &amp; Sway</div>
+      <div id="params-hair"></div>
+    </div>
+
+  </div><!-- /panel-body -->
+</div><!-- /panel -->
+
+<script>
+// ── Parameter definitions ────────────────────────────────────────────────────
+const PARAM_GROUPS = [
+  { id: 'params-head', params: [
+    { id:'ParamAngleX',    label:'Angle X',   min:-30, max:30,  step:0.1,  def:0 },
+    { id:'ParamAngleY',    label:'Angle Y',   min:-30, max:30,  step:0.1,  def:0 },
+    { id:'ParamAngleZ',    label:'Angle Z',   min:-30, max:30,  step:0.1,  def:0 },
+    { id:'ParamCheek',     label:'Cheek',     min:0,   max:1,   step:0.01, def:0 },
+  ]},
+  { id: 'params-eyes', params: [
+    { id:'ParamEyeLOpen',  label:'L Eye Open',  min:0, max:1, step:0.01, def:1 },
+    { id:'ParamEyeROpen',  label:'R Eye Open',  min:0, max:1, step:0.01, def:1 },
+    { id:'ParamEyeLSmile', label:'L Eye Smile', min:0, max:1, step:0.01, def:0 },
+    { id:'ParamEyeRSmile', label:'R Eye Smile', min:0, max:1, step:0.01, def:0 },
+    { id:'ParamEyeBallX',  label:'Eyeball X',   min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamEyeBallY',  label:'Eyeball Y',   min:-1, max:1, step:0.01, def:0 },
+  ]},
+  { id: 'params-brow', params: [
+    { id:'ParamBrowLY',     label:'L Brow Y',     min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowRY',     label:'R Brow Y',     min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowLX',     label:'L Brow X',     min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowRX',     label:'R Brow X',     min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowLAngle', label:'L Brow Angle', min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowRAngle', label:'R Brow Angle', min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowLForm',  label:'L Brow Form',  min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamBrowRForm',  label:'R Brow Form',  min:-1, max:1, step:0.01, def:0 },
+  ]},
+  { id: 'params-mouth', params: [
+    { id:'ParamMouthOpenY', label:'Mouth Open', min:0, max:1, step:0.01, def:0 },
+    { id:'ParamMouthForm',  label:'Mouth Form', min:-1, max:1, step:0.01, def:0 },
+  ]},
+  { id: 'params-body', params: [
+    { id:'ParamBodyAngleX', label:'Body Angle X', min:-10, max:10, step:0.1, def:0 },
+    { id:'ParamBodyAngleY', label:'Body Angle Y', min:-10, max:10, step:0.1, def:0 },
+    { id:'ParamBodyAngleZ', label:'Body Angle Z', min:-10, max:10, step:0.1, def:0 },
+    { id:'ParamBreath',     label:'Breath',       min:0, max:1, step:0.01, def:0 },
+    { id:'ParamArmL',       label:'Arm L',        min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamArmR',       label:'Arm R',        min:-1, max:1, step:0.01, def:0 },
+  ]},
+  { id: 'params-hair', params: [
+    { id:'ParamHairFront',  label:'Hair Front',   min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamHairFront2', label:'Hair Front 2', min:-1, max:1, step:0.01, def:0 },
+    { id:'ParamHairBack',   label:'Hair Back',    min:-1, max:1, step:0.01, def:0 },
+  ]},
+];
+
+// ── State ───────────────────────────────────────────────────────────────────
+let app, model;
+let manualMode = false;
+let currentScale = 1.0;
+const overrides = {}; // paramId -> value (used in manual mode)
+
+// ── Build slider UI ─────────────────────────────────────────────────────────
+function buildSliders() {
+  for (const group of PARAM_GROUPS) {
+    const container = document.getElementById(group.id);
+    for (const p of group.params) {
+      const row = document.createElement('div');
+      row.className = 'param-row';
+
+      const lbl = document.createElement('label');
+      lbl.title = p.id;
+      lbl.textContent = p.label;
+
+      const sl = document.createElement('input');
+      sl.type = 'range';
+      sl.min = p.min;
+      sl.max = p.max;
+      sl.step = p.step;
+      sl.value = p.def;
+      sl.id = 'sl_' + p.id;
+
+      const val = document.createElement('span');
+      val.className = 'param-val';
+      val.id = 'val_' + p.id;
+      val.textContent = p.def.toFixed(2);
+
+      sl.addEventListener('input', () => {
+        const v = parseFloat(sl.value);
+        val.textContent = v.toFixed(2);
+        overrides[p.id] = v;
+        if (manualMode && model) {
+          model.internalModel.coreModel.setParameterValueById(p.id, v);
+        }
+      });
+
+      row.appendChild(lbl);
+      row.appendChild(sl);
+      row.appendChild(val);
+      container.appendChild(row);
+    }
+  }
+}
+
+// ── Update slider displays from live model ──────────────────────────────────
+function syncSliders() {
+  if (!model || manualMode) return;
+  for (const group of PARAM_GROUPS) {
+    for (const p of group.params) {
+      const sl = document.getElementById('sl_' + p.id);
+      const vl = document.getElementById('val_' + p.id);
+      if (!sl) continue;
+      try {
+        const core = model.internalModel.coreModel;
+        const idx = core.getParameterIndex(p.id);
+        if (idx >= 0) {
+          const v = core.getParameterValueByIndex(idx);
+          sl.value = v;
+          vl.textContent = v.toFixed(2);
+        }
+      } catch (_) {}
+    }
+  }
+}
+
+// ── Main init ───────────────────────────────────────────────────────────────
+async function init() {
+  const wrap = document.getElementById('canvas-wrap');
+  const canvas = document.getElementById('canvas');
+
+  app = new PIXI.Application({
+    view: canvas,
+    width: wrap.clientWidth,
+    height: wrap.clientHeight,
+    backgroundColor: 0x0d1117,
+    antialias: true,
+    resolution: window.devicePixelRatio || 1,
+    autoDensity: true,
+  });
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    app.renderer.resize(wrap.clientWidth, wrap.clientHeight);
+    if (model) positionModel();
+  });
+
+  try {
+    model = await PIXI.live2d.Live2DModel.from('miku_sample_t04.model3.json', {
+      autoInteract: true,
+    });
+
+    app.stage.addChild(model);
+    positionModel();
+
+    // Start idle motion
+    model.motion('Idle');
+
+    // Sync sliders every frame
+    app.ticker.add(syncSliders);
+
+    setStatus('✅ Miku loaded! Enjoy~', 2000);
+  } catch (err) {
+    setStatus('❌ Failed to load model: ' + err.message);
+    console.error(err);
+  }
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function positionModel() {
+  if (!model) return;
+  const sw = app.screen.width;
+  const sh = app.screen.height;
+  const scale = Math.min(sw / model.internalModel.originalWidth,
+                         sh / model.internalModel.originalHeight) * 0.85 * currentScale;
+  model.scale.set(scale);
+  model.x = sw / 2;
+  model.y = sh / 2;
+  model.anchor.set(0.5, 0.5);
+}
+
+function setStatus(msg, hideAfter) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.style.opacity = '1';
+  if (hideAfter) {
+    setTimeout(() => { el.style.opacity = '0'; }, hideAfter);
+  }
+}
+
+// ── Control API (called from HTML) ──────────────────────────────────────────
+function playMotion(group, index) {
+  if (!model) return;
+  model.motion(group, index);
+  setStatus(`▶ ${group} ${index + 1}`, 1500);
+}
+
+function stopMotion() {
+  if (!model) return;
+  model.internalModel.motionManager.stopAllMotions();
+  setStatus('⏹ Stopped', 1200);
+}
+
+function toggleTracking(enabled) {
+  if (!model) return;
+  model.autoInteract = enabled;
+}
+
+function toggleManual(enabled) {
+  manualMode = enabled;
+  if (enabled) {
+    stopMotion();
+    setStatus('🕹 Manual mode ON', 1500);
+  } else {
+    model && model.motion('Idle');
+    setStatus('🤖 Auto mode ON', 1500);
+  }
+}
+
+function setBg(hex) {
+  // Convert hex to number
+  const n = parseInt(hex.slice(1), 16);
+  app && app.renderer.backgroundColor !== undefined && (app.renderer.backgroundColor = n);
+  document.getElementById('canvas-wrap').style.background = hex;
+}
+
+function setScale(v) {
+  currentScale = parseFloat(v);
+  document.getElementById('val-scale').textContent = currentScale.toFixed(2);
+  positionModel();
+}
+
+// ── Bootstrap ────────────────────────────────────────────────────────────────
+buildSliders();
+init();
+</script>
+</body>
+</html>
