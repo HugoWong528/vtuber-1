@@ -28,13 +28,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install fonts for FFmpeg subtitle rendering
-      - name: Install fonts
+      # Install FFmpeg and fonts for video composition and subtitle rendering
+      - name: Install system dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y fonts-liberation fonts-noto
+          sudo apt-get install -y ffmpeg fonts-liberation fonts-noto
 
-      # Confirm FFmpeg is available (pre-installed on ubuntu-latest)
+      # Confirm FFmpeg is available
       - name: Verify FFmpeg
         run: ffmpeg -version | head -1
 
@@ -63,7 +63,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add videos/ logs/ 2>/dev/null || true
+          git add videos/ logs/ cache/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Nothing new to commit."
           else
