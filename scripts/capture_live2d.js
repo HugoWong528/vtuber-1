@@ -101,24 +101,33 @@ function startFFmpeg(output, fps) {
   }
   console.log('[capture] Model ready — starting frame capture');
 
-  // Let the idle animation settle for half a second before recording
-  await new Promise(r => setTimeout(r, 500));
+  // The browser-side warm-up (90 frames of physics simulation) already ran
+  // inside init() before window.modelReady was set to true, so we can start
+  // recording immediately without an additional real-time sleep.
 
   const ff = startFFmpeg(outputMp4, FPS);
 
-  // Capture each frame as a PNG and pipe directly into FFmpeg
+  // Capture each frame as a PNG and pipe directly into FFmpeg.
+  //
+  // Key change for smooth output:
+  //   window.advanceFrame(ms) steps the Live2D animation forward by exactly
+  //   `ms` milliseconds using a fixed virtual clock, then synchronously
+  //   triggers a PIXI render.  This decouples animation advancement from
+  //   wall-clock time, so every frame represents a uniform slice of animation
+  //   regardless of how long the screenshot round-trip takes.  The old approach
+  //   of setTimeout(FRAME_MS) *after* each screenshot produced irregular frame
+  //   spacing (screenshot_time + FRAME_MS ≠ FRAME_MS), which is what caused
+  //   the visible jitter / shaking in the output video.
   for (let i = 0; i < TOTAL_FRAMES; i++) {
+    // Advance the Live2D model and PIXI renderer by exactly one frame period.
+    await page.evaluate((ms) => window.advanceFrame(ms), FRAME_MS);
+
     const pngBuf = await page.screenshot({ type: 'png', omitBackground: false });
     ff.stdin.write(pngBuf);
 
     if ((i + 1) % FPS === 0 || i === TOTAL_FRAMES - 1) {
       const elapsed = ((i + 1) / FPS).toFixed(1);
       console.log(`[capture] ${i + 1}/${TOTAL_FRAMES} frames (${elapsed}s)`);
-    }
-
-    // Wait the appropriate inter-frame interval (let the browser animate)
-    if (i < TOTAL_FRAMES - 1) {
-      await new Promise(r => setTimeout(r, FRAME_MS));
     }
   }
 

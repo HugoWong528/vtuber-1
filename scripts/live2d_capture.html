@@ -95,6 +95,59 @@ async function init() {
     // Start idle animation loop
     model.motion('Idle');
 
+    // ── Fixed time-step animation control ───────────────────────────────────
+    // The root cause of shaky-looking output is that Puppeteer screenshots
+    // take variable amounts of time (50-100ms in headless Chromium), yet the
+    // old code waited a *further* FRAME_MS after each screenshot.  This means
+    // consecutive frames sampled from the Live2D animation were NOT equally
+    // spaced in animation time, so motion appeared jerky when FFmpeg played
+    // them back at a constant frame rate.
+    //
+    // Fix: stop PIXI's real-time RAF-driven tickers and advance the animation
+    // by exactly one frame period via a controlled virtual clock before every
+    // screenshot.  This guarantees uniform frame spacing regardless of how
+    // long the screenshot round-trip takes.
+
+    const sharedTicker = PIXI.Ticker.shared;
+
+    // Halt the automatic render loops.
+    sharedTicker.stop();
+    app.ticker.stop();
+
+    // Re-enable manual update() calls.  PIXI checks this flag before firing
+    // listeners; we need it true even though the RAF loop is cancelled.
+    // NOTE: _started is an internal property of PIXI.Ticker (pixi.js@6).
+    // There is no public API to allow manual update() calls after stop(), so
+    // this is a deliberate, version-pinned internal access.  If upgrading
+    // pixi.js beyond v6, verify that Ticker.update() still respects _started.
+    sharedTicker._started = true;
+    app.ticker._started    = true;
+
+    // Virtual clock — starts from now so the first delta is well-defined.
+    let _vt = performance.now();
+
+    // Physics warm-up: advance this many frames before recording so that
+    // hair, clothes, and other physics constraints settle into natural positions.
+    const WARM_UP_FRAMES = 90; // 1.5 s of animation time at 60 fps
+    const WARM_FPS = 60;
+    const WARM_FRAME_MS = 1000 / WARM_FPS;
+    for (let i = 0; i < WARM_UP_FRAMES; i++) {
+      _vt += WARM_FRAME_MS;
+      sharedTicker.update(_vt);
+    }
+    // Render the settled state once.
+    app.ticker.update(_vt);
+
+    // Expose a frame stepper for Puppeteer to call before each screenshot.
+    // Advancing both tickers with the same virtual time ensures the Live2D
+    // model (driven by sharedTicker) and the PIXI renderer (driven by
+    // app.ticker) always stay in sync.
+    window.advanceFrame = function (ms) {
+      _vt += ms;
+      sharedTicker.update(_vt);
+      app.ticker.update(_vt);
+    };
+
     window.modelReady = true;
   } catch (err) {
     window.modelError = err.message || String(err);
