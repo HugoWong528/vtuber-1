@@ -734,7 +734,7 @@ function installEnhancedAnimation() {
     // Blend over whatever the motion system set for eye open.
     if (_blinkTimer >= _nextBlink) {
       const phase = _blinkTimer - _nextBlink;
-      const half = 0.08; // 80 ms close, 80 ms open
+      const half = 0.08; // 0.08 seconds (80 ms) to close, 80 ms to re-open
       if (phase < half * 2) {
         const openness = phase < half
           ? 1 - phase / half          // close: 1→0
@@ -750,9 +750,12 @@ function installEnhancedAnimation() {
     }
 
     // ── Gentle mouth breathing (adds to any existing motion value) ───
-    // Only active when no Wave motion is running so it doesn't fight it.
+    // Skips if a Wave motion appears to be running (best-effort check).
     const motionMgr = im.motionManager;
-    const isWaving = motionMgr && motionMgr.currentGroup === 'Wave';
+    let isWaving = false;
+    try {
+      isWaving = !!(motionMgr && motionMgr.currentGroup === 'Wave');
+    } catch (_) { /* property may not exist in all SDK versions */ }
     if (!isWaving) {
       const breath = Math.sin(_enhAnimTime * Math.PI * 0.6) * 0.12;
       const existing = (() => {
