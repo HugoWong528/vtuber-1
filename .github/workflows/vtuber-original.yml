@@ -59,10 +59,23 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Puppeteer
+      - name: Install Puppeteer and Live2D front-end libraries
         run: |
-          # Install Puppeteer (downloads Chromium automatically)
-          npm install puppeteer
+          # Install Puppeteer (downloads Chromium automatically) and the
+          # front-end libraries needed by live2d_capture.html so they can be
+          # served from localhost instead of fetched from external CDNs.
+          npm install puppeteer pixi.js@6 pixi-live2d-display@0.4.0
+        working-directory: ${{ github.workspace }}
+
+      - name: Download Live2D Cubism Core SDK
+        run: |
+          # The Cubism Core is a proprietary binary served from Live2D's own
+          # CDN.  Download it once during setup so Puppeteer can load it from
+          # the local HTTP server rather than reaching out to the internet.
+          mkdir -p scripts/vendor
+          curl -fsSL --retry 3 --retry-delay 5 \
+            "https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js" \
+            -o scripts/vendor/live2dcubismcore.min.js
         working-directory: ${{ github.workspace }}
 
       # ── Python (for TTS, music, video composition, YouTube upload) ───────
