@@ -250,6 +250,7 @@
         <button class="motion-big" onclick="playMotion('Flick',0)">💨 Flick 1</button>
         <button class="motion-big" onclick="playMotion('Flick',1)">💨 Flick 2</button>
         <button class="motion-big" onclick="playMotion('FlickUp',0)">⬆ Flick Up</button>
+        <button class="motion-big" onclick="playWaveHello()">👋 Wave Hello</button>
       </div>
       <div class="btn-row">
         <button style="width:100%" onclick="stopMotion()">⏹ Stop Motion</button>
@@ -318,6 +319,7 @@
         <button onclick="playMotion('Flick',0)">Flick 1</button>
         <button onclick="playMotion('Flick',1)">Flick 2</button>
         <button onclick="playMotion('FlickUp',0)">Flick Up</button>
+        <button onclick="playWaveHello()">👋 Wave Hello</button>
       </div>
       <div class="btn-row">
         <button onclick="stopMotion()">⏹ Stop</button>
@@ -570,6 +572,11 @@ async function init() {
     // Sync sliders every frame
     app.ticker.add(syncSliders);
 
+    // Enhanced auto-animation: blink and mouth overlay
+    // We monkey-patch the internalModel's update so we can
+    // inject bigger blinks and mouth movement after motion eval.
+    installEnhancedAnimation();
+
     setStatus('✅ Miku loaded! Enjoy~', 2000);
   } catch (err) {
     setStatus('❌ Failed to load model: ' + err.message);
@@ -604,6 +611,12 @@ function playMotion(group, index) {
   if (!model) return;
   model.motion(group, index);
   setStatus(`▶ ${group} ${index + 1}`, 1500);
+}
+
+function playWaveHello() {
+  if (!model) return;
+  model.motion('Wave', 0);
+  setStatus('👋 Wave Hello!', 2000);
 }
 
 function stopMotion() {
@@ -694,6 +707,64 @@ function toggleMode() {
     if (manualMode) toggleManual(false);
     setStatus('😊 Easy Mode activated', 1500);
   }
+}
+
+// ── Enhanced auto-animation (bigger blink + mouth motion) ───────────────────
+// Runs AFTER the motion system updates parameters each frame by patching
+// the internalModel's update method.
+let _enhAnimTime = 0;
+let _blinkTimer = 0;
+let _nextBlink = 3.5;
+
+function installEnhancedAnimation() {
+  const im = model.internalModel;
+  const origUpdate = im.update.bind(im);
+
+  im.update = function(dt) {
+    origUpdate(dt);
+    if (manualMode) return;
+
+    const dtSec = dt / 1000;
+    _enhAnimTime += dtSec;
+    _blinkTimer += dtSec;
+
+    const core = im.coreModel;
+
+    // ── Auto enhanced blink ──────────────────────────────────────────
+    // Blend over whatever the motion system set for eye open.
+    if (_blinkTimer >= _nextBlink) {
+      const phase = _blinkTimer - _nextBlink;
+      const half = 0.08; // 80 ms close, 80 ms open
+      if (phase < half * 2) {
+        const openness = phase < half
+          ? 1 - phase / half          // close: 1→0
+          : (phase - half) / half;    // open:  0→1
+        const clamped = Math.max(0, Math.min(1, openness));
+        core.setParameterValueById('ParamEyeLOpen', clamped);
+        core.setParameterValueById('ParamEyeROpen', clamped);
+      } else {
+        // Reset for next blink (random 3-6 s)
+        _blinkTimer = 0;
+        _nextBlink = 3 + Math.random() * 3;
+      }
+    }
+
+    // ── Gentle mouth breathing (adds to any existing motion value) ───
+    // Only active when no Wave motion is running so it doesn't fight it.
+    const motionMgr = im.motionManager;
+    const isWaving = motionMgr && motionMgr.currentGroup === 'Wave';
+    if (!isWaving) {
+      const breath = Math.sin(_enhAnimTime * Math.PI * 0.6) * 0.12;
+      const existing = (() => {
+        try {
+          const idx = core.getParameterIndex('ParamMouthOpenY');
+          return idx >= 0 ? core.getParameterValueByIndex(idx) : 0;
+        } catch { return 0; }
+      })();
+      const combined = Math.max(0, Math.min(1, existing + Math.max(0, breath)));
+      core.setParameterValueById('ParamMouthOpenY', combined);
+    }
+  };
 }
 
 // ── Bootstrap ────────────────────────────────────────────────────────────────

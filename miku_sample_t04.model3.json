@@ -39,6 +39,11 @@
 				{
 					"File": "miku_06.motion3.json"
 				}
+			],
+			"Wave": [
+				{
+					"File": "miku_09.motion3.json"
+				}
 			]
 		}
 	},
