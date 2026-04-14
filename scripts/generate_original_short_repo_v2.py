@@ -2,17 +2,22 @@
 """
 VTuber Original Short Generator — Repository Save Only  (v2)
 =============================================================
-Pipeline identical to generate_original_short_repo.py with two enhancements:
+Pipeline identical to generate_original_short_repo.py with these enhancements:
 
   1. Subtitle FontSize reduced from 38 to 14.
-  2. VTuber motion follows speech content:
+  2. VTuber motion is AI-controlled:
+       • The AI (same Pollinations text model used for script generation) reads
+         the full spoken script and returns a JSON motion-cue schedule — mapping
+         each emotional beat to the best Live2D motion group and frame index.
+       • If the AI call fails, a keyword-based fallback (greeting / excited /
+         sad / surprise word matching) is used instead.
        • Lip-sync mouth animation is active throughout (handled in the
          capture HTML via a sine-wave oscillation of ParamMouthOpenY).
-       • A motion-cue schedule is derived from the AI script by detecting
-         greeting words (→ Wave), excited words (→ FlickUp), action/tap words
-         (→ Tap), surprise words (→ Flick), and periodic idle resets (→ Idle).
        • The schedule is passed as JSON to capture_live2d_v2.js, which
          triggers window.triggerMotion() at the exact frame each cue fires.
+  3. Model is rendered at a larger scale (1.35× fill) and shifted slightly
+     downward so the character fills more of the frame and every motion is
+     clearly visible to the viewer.
 
 Available motion groups in the Miku model:
   Idle     → miku_01, miku_04, miku_07  (looping idle breathing)
@@ -192,53 +197,156 @@ def ai_generate_content() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Motion-cue generation — analyse script text to schedule VTuber reactions
+# Motion-cue generation — AI-powered scheduling with keyword fallback
 # ---------------------------------------------------------------------------
 
-# Words that map to specific motion groups
-_GREETING_WORDS  = {"hello", "hi", "hey", "greetings", "howdy", "welcome", "konnichiwa", "ohayo"}
-_EXCITED_WORDS   = {
-    "wow", "amazing", "incredible", "awesome", "excited", "exciting",
-    "great", "fantastic", "wonderful", "omg", "yes", "yay", "hooray",
-    "love", "best", "perfect", "epic", "fire", "insane",
-}
-_SAD_WORDS       = {
-    "sad", "sorry", "unfortunate", "sadly", "unfortunately",
-    "miss", "missed", "crying", "terrible", "bad", "awful",
-}
-_SURPRISE_WORDS  = {
-    "wait", "what", "really", "seriously", "unbelievable", "surprise",
-    "suddenly", "unexpected", "actually", "crazy", "shocking",
+_MOTION_GROUPS = {
+    "Wave":    {"max_index": 0, "desc": "greeting wave — use when Miku says hello/hi/welcome"},
+    "FlickUp": {"max_index": 0, "desc": "excited upward flick — use for joy, hype, amazing moments"},
+    "Tap":     {"max_index": 1, "desc": "gentle tap — use for calm explanation, soft/sad moments"},
+    "Flick":   {"max_index": 1, "desc": "flick/surprise — use for shock, unexpected, or dramatic beats"},
+    "Idle":    {"max_index": 2, "desc": "idle breathing reset — use between active cues to avoid freezing"},
 }
 
-# Minimum number of frames to keep between motion triggers (avoids hammering
-# the motion manager with rapid consecutive calls on the same group).
+_AI_MOTION_PROMPT = """\
+You are a VTuber animation director for Miku (Hatsune Miku).
+Your job is to schedule body-language / motion cues so the Live2D model reacts naturally to what Miku is saying.
+
+Available motion groups (motionIndex range in brackets):
+  Wave    [0]   – greeting wave – use when Miku says hello/hi/welcome
+  FlickUp [0]   – excited upward flick – use for joy, hype, amazing moments
+  Tap     [0-1] – gentle tap – use for calm explanation, soft or sad moments
+  Flick   [0-1] – flick/surprise – use for shock, unexpected, or dramatic beats
+  Idle    [0-2] – idle breathing reset – use between active cues to avoid freezing
+
+Rules:
+• Return ONLY a valid JSON array — no markdown, no code fences, no commentary.
+• Each item: {{"frameIndex": <int>, "group": "<group>", "motionIndex": <int>}}
+• Video is {total_frames} frames long at {fps} fps ({duration:.1f} s).
+• Schedule 10-18 cues spread throughout the video.
+• First cue must be at frame 0 (Wave if Miku greets, otherwise Idle).
+• Never place two cues of the SAME group within 45 frames of each other.
+• Distribute cues so they align with the emotional beats of the script.
+• End with an Idle reset within the last 90 frames.
+
+Script:
+{script}
+"""
+
+# Minimum number of frames to keep between motion triggers
 _MIN_FRAMES_BETWEEN_CUES = 45  # ~1.5 s at 30 fps
 
 
-def generate_motion_cues(script: str, duration: float, fps: int) -> list[dict]:
+def _validate_motion_cues(cues: list, total_frames: int) -> list[dict]:
     """
-    Analyse *script* and return a list of motion-cue dicts:
-      {"frameIndex": int, "group": str, "motionIndex": int}
+    Validate and clean AI-generated motion cues:
+    - Keep only recognised groups.
+    - Clamp frameIndex to [0, total_frames).
+    - Enforce motionIndex range per group.
+    - Drop cues that violate the per-group cooldown.
+    - Sort by frameIndex.
+    """
+    valid_groups = set(_MOTION_GROUPS.keys())
+    cleaned: list[dict] = []
+    last_frame_by_group: dict[str, int] = {}
 
-    Strategy
-    --------
-    • Estimate per-word timing by dividing *duration* evenly across all words
-      (rough but sufficient given that motion triggers are blended by the
-      Live2D motion manager anyway).
-    • First 5 words: detect greeting → schedule a Wave.
-    • All words: detect excited, sad, or surprise vocabulary → schedule the
-      matching motion group.
-    • Every ~8 s of silence (no non-idle cue in the window): insert an Idle
-      reset so the animation does not stagnate on a single pose.
-    • Deduplicate: skip a cue if the same group fired within _MIN_FRAMES_BETWEEN_CUES.
+    for item in sorted(cues, key=lambda x: x.get("frameIndex", 0)):
+        group = item.get("group", "")
+        if group not in valid_groups:
+            continue
+        fi = max(0, min(int(item.get("frameIndex", 0)), total_frames - 1))
+        mi = max(0, min(int(item.get("motionIndex", 0)), _MOTION_GROUPS[group]["max_index"]))
+        if fi - last_frame_by_group.get(group, -9999) < _MIN_FRAMES_BETWEEN_CUES:
+            continue
+        cleaned.append({"frameIndex": fi, "group": group, "motionIndex": mi})
+        last_frame_by_group[group] = fi
+
+    return cleaned
+
+
+def generate_motion_cues_ai(script: str, duration: float, fps: int) -> list[dict]:
     """
+    Ask the Pollinations text AI to generate a motion-cue schedule based on
+    the emotional content of *script*.  Falls back to keyword matching if AI
+    fails or returns unusable results.
+    """
+    total_frames = int(duration * fps)
+    prompt = _AI_MOTION_PROMPT.format(
+        total_frames=total_frames,
+        fps=fps,
+        duration=duration,
+        script=script,
+    )
+
+    print("[MotionCues] Asking AI to generate motion schedule …")
+    client = pollinations_client()
+    last_error: Optional[Exception] = None
+
+    for model in TEXT_MODEL_FALLBACK:
+        try:
+            print(f"    Trying model: {model}")
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+                max_tokens=600,
+            )
+            raw = response.choices[0].message.content.strip()
+            # Strip markdown fences if present
+            raw = re.sub(r"^```(?:json)?\s*", "", raw)
+            raw = re.sub(r"\s*```$", "", raw)
+            raw = raw.strip()
+            cues_raw = json.loads(raw)
+            if not isinstance(cues_raw, list):
+                raise ValueError("AI response is not a JSON array")
+
+            cues = _validate_motion_cues(cues_raw, total_frames)
+            # Require at least this many valid cues; fewer suggests the AI
+            # misunderstood the format or the script is too short to schedule.
+            _MIN_VALID_CUES = 3
+            if len(cues) < _MIN_VALID_CUES:
+                raise ValueError(f"Too few valid cues after validation: {len(cues)}")
+
+            print(f"    ✓ AI motion schedule via {model}: {len(cues)} cue(s)")
+            for c in cues:
+                print(f"    frame {c['frameIndex']:4d}  {c['group']} [{c['motionIndex']}]")
+            return cues
+
+        except Exception as exc:
+            print(f"    ✗ Model {model} failed for motion cues: {exc}")
+            last_error = exc
+            time.sleep(1)
+
+    print(f"    ⚠ AI motion generation failed ({last_error}); falling back to keyword matching …")
+    return _generate_motion_cues_keyword(script, duration, fps)
+
+
+def _generate_motion_cues_keyword(script: str, duration: float, fps: int) -> list[dict]:
+    """
+    Keyword-based fallback: scan the script for emotional words and map them
+    to motion groups.  Used only when the AI call fails.
+    """
+    _GREETING_WORDS = {"hello", "hi", "hey", "greetings", "howdy", "welcome", "konnichiwa", "ohayo"}
+    _EXCITED_WORDS  = {
+        "wow", "amazing", "incredible", "awesome", "excited", "exciting",
+        "great", "fantastic", "wonderful", "omg", "yes", "yay", "hooray",
+        "love", "best", "perfect", "epic", "fire", "insane",
+    }
+    _SAD_WORDS = {
+        "sad", "sorry", "unfortunate", "sadly", "unfortunately",
+        "miss", "missed", "crying", "terrible", "bad", "awful",
+    }
+    _SURPRISE_WORDS = {
+        "wait", "what", "really", "seriously", "unbelievable", "surprise",
+        "suddenly", "unexpected", "actually", "crazy", "shocking",
+    }
+
     words = script.split()
     total_words = len(words)
     if total_words == 0 or duration <= 0:
         return []
 
-    word_duration = duration / total_words  # seconds per word
+    word_duration = duration / total_words
     cues: list[dict] = []
     last_frame_by_group: dict[str, int] = {}
 
@@ -246,7 +354,6 @@ def generate_motion_cues(script: str, duration: float, fps: int) -> list[dict]:
         return re.sub(r"[^a-z]", "", w.lower())
 
     def _add_cue(frame_idx: int, group: str, motion_idx: int = 0) -> bool:
-        """Return True if the cue was added (not suppressed by cooldown)."""
         fi = max(0, frame_idx)
         if fi - last_frame_by_group.get(group, -9999) < _MIN_FRAMES_BETWEEN_CUES:
             return False
@@ -254,46 +361,36 @@ def generate_motion_cues(script: str, duration: float, fps: int) -> list[dict]:
         last_frame_by_group[group] = fi
         return True
 
-    def _alternate_idx() -> int:
-        """Return 0 or 1 alternating with each call, for motion variety."""
+    def _alt() -> int:
         return len(cues) % 2
 
-    # ── Scan through every word ──────────────────────────────────────────────
     last_non_idle_frame = -9999
-    idle_interval_frames = int(fps * 8)  # insert Idle reset every ~8 s
+    idle_interval_frames = int(fps * 8)
 
     for word_idx, word in enumerate(words):
         clean = _clean(word)
         frame_idx = int(word_idx * word_duration * fps)
 
         if word_idx < 5 and clean in _GREETING_WORDS:
-            # Greeting in the first 5 words → Wave (index 0)
             if _add_cue(frame_idx, "Wave", 0):
                 last_non_idle_frame = frame_idx
-
         elif clean in _EXCITED_WORDS:
             if _add_cue(frame_idx, "FlickUp", 0):
                 last_non_idle_frame = frame_idx
-
         elif clean in _SAD_WORDS:
-            # Alternate between two Tap motions for variety
-            if _add_cue(frame_idx, "Tap", _alternate_idx()):
+            if _add_cue(frame_idx, "Tap", _alt()):
                 last_non_idle_frame = frame_idx
-
         elif clean in _SURPRISE_WORDS:
-            if _add_cue(frame_idx, "Flick", _alternate_idx()):
+            if _add_cue(frame_idx, "Flick", _alt()):
                 last_non_idle_frame = frame_idx
 
-        # Periodic Idle reset to prevent the model freezing on one pose
         if frame_idx - last_non_idle_frame >= idle_interval_frames:
             idle_idx = len([c for c in cues if c["group"] == "Idle"]) % 3
-            if _add_cue(frame_idx, "Idle", idle_idx):
-                pass  # Idle resets don't count as "non-idle"
+            _ = _add_cue(frame_idx, "Idle", idle_idx)  # Idle resets don't update last_non_idle_frame
 
-    print(f"[MotionCues] Generated {len(cues)} motion cue(s):")
+    print(f"[MotionCues] Keyword fallback generated {len(cues)} cue(s):")
     for c in cues:
         print(f"    frame {c['frameIndex']:4d}  {c['group']} [{c['motionIndex']}]")
-
     return cues
 
 
@@ -713,7 +810,7 @@ def main() -> None:
         # 2. Render Live2D Miku model with motion cues
         # Motion cues are derived here so they are available even when
         # re-using a cached Live2D clip (the cues only affect capture).
-        motion_cues = generate_motion_cues(
+        motion_cues = generate_motion_cues_ai(
             content["script"],
             duration=CAPTURE_DURATION_SECS,
             fps=CAPTURE_FPS,
