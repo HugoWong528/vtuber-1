@@ -86,10 +86,10 @@ async function init() {
     const scale = Math.min(
       1080 / model.internalModel.originalWidth,
       1920 / model.internalModel.originalHeight
-    ) * 0.92;
+    ) * 1.35;
     model.scale.set(scale);
     model.x = 1080 / 2;
-    model.y = 1920 / 2;
+    model.y = 1920 / 2 + 120;
     model.anchor.set(0.5, 0.5);
 
     // Start idle animation
