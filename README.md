@@ -1,5 +1,5 @@
 # 🎤 VTuber Auto-Short Generator-gd to form video
-
+Visit https://hugow0528.github.io/Vtuber-norm1/ to view web version
 An automated AI pipeline that creates and publishes YouTube Shorts featuring a VTuber character — fully hands-free via GitHub Actions, powered by the [Pollinations API](https://gen.pollinations.ai).
 
 ---
