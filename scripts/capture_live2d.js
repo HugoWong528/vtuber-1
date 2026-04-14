@@ -26,12 +26,14 @@ const { spawn }  = require('child_process');
 const process    = require('process');
 
 // ── CLI arguments ────────────────────────────────────────────────────────────
-const [,, serverPort, outputMp4, durationStr, fpsStr] = process.argv;
+const [,, serverPort, outputMp4, durationStr, fpsStr, presetArg] = process.argv;
 
 if (!serverPort || !outputMp4 || !durationStr || !fpsStr) {
-  console.error('Usage: node capture_live2d.js <port> <output.mp4> <duration_secs> <fps>');
+  console.error('Usage: node capture_live2d.js <port> <output.mp4> <duration_secs> <fps> [ffmpeg_preset]');
   process.exit(1);
 }
+
+const FFMPEG_PRESET = presetArg || 'slow';
 
 const DURATION     = parseFloat(durationStr);
 const FPS          = parseInt(fpsStr, 10);
@@ -51,7 +53,7 @@ function startFFmpeg(output, fps) {
     '-vcodec', 'png',
     '-i', 'pipe:0',
     '-c:v', 'libx264',
-    '-preset', 'slow',
+    '-preset', FFMPEG_PRESET,
     '-crf', '18',
     '-pix_fmt', 'yuv420p',
     '-movflags', '+faststart',
