@@ -97,3 +97,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! I’m Miku! 💙 Who am I? I’m a virtual singer, a digital idol, and your cheerful little burst of positivity on the internet! I love music, anime vibes, cute moments, and making people smile. Th… |
 
 ---
+
+## 2026:04:14 12-57-14 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-14_12-57-14.mp4](videos/2026-04-14_12-57-14.mp4) |
+| **Metadata** | [videos/2026-04-14_12-57-14.json](videos/2026-04-14_12-57-14.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
