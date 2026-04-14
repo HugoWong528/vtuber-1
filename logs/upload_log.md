@@ -109,3 +109,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:14 13-47-40 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | HKDSE Tomorrow? Don’t Panic, You’ve Got This! #Shorts |
+| **Video** | [videos/2026-04-14_13-47-40.mp4](videos/2026-04-14_13-47-40.mp4) |
+| **Metadata** | [videos/2026-04-14_13-47-40.json](videos/2026-04-14_13-47-40.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hi hi! Miku here~ 💙 If your HKDSE is tomorrow, don’t worry, okay? You do not need to be perfect—you just need to do your best! Tonight, don’t panic-study until 3 a.m. Please sleep early, drink some… |
+
+---
