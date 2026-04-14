@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miku Capture V2</title>
+
+  <!-- Live2D Cubism 4 Core (served locally — downloaded by CI workflow) -->
+  <script src="/scripts/vendor/live2dcubismcore.min.js"
+          onerror="window.modelError='Failed to load Cubism Core SDK'"></script>
+  <!-- PIXI.js v6 (served from node_modules installed by CI workflow) -->
+  <script src="/node_modules/pixi.js/dist/browser/pixi.min.js"
+          onerror="window.modelError='Failed to load PIXI.js'"></script>
+  <!-- pixi-live2d-display cubism4 build (served from node_modules) -->
+  <script src="/node_modules/pixi-live2d-display/dist/cubism4.min.js"
+          onerror="window.modelError='Failed to load pixi-live2d-display'"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+    #canvas { display: block; width: 1080px; height: 1920px; }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+// Model path — served from the repo root by the local HTTP server
+const MODEL_PATH = '/miku_sample_t04.model3.json';
+
+// Signals for Puppeteer to poll
+window.modelReady = false;
+window.modelError = null;
+
+// Speaking state — when true, mouth oscillates to simulate lip sync
+window._speaking   = false;
+window._speakPhase = 0;
+
+// Motion cue schedule: array of { frameIndex, group, motionIndex }
+// Populated by Puppeteer via window.setMotionSchedule() before recording starts.
+window._motionSchedule = [];
+
+async function init() {
+  try {
+    const canvas = document.getElementById('canvas');
+
+    const app = new PIXI.Application({
+      view: canvas,
+      width: 1080,
+      height: 1920,
+      transparent: true,
+      antialias: true,
+      resolution: 1,
+      autoDensity: false,
+    });
+
+    // ── Gradient background ──────────────────────────────────────────────────
+    const gradient = app.renderer.generateTexture(
+      (() => {
+        const g = new PIXI.Graphics();
+        const cvs = document.createElement('canvas');
+        cvs.width = 1080;
+        cvs.height = 1920;
+        const ctx = cvs.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+        grad.addColorStop(0, '#1a0533');
+        grad.addColorStop(0.5, '#2d1b69');
+        grad.addColorStop(1, '#00c8a0');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1920);
+        return new PIXI.Sprite(PIXI.Texture.from(cvs));
+      })()
+    );
+    const bgSprite = new PIXI.Sprite(gradient);
+    bgSprite.width = 1080;
+    bgSprite.height = 1920;
+    app.stage.addChild(bgSprite);
+
+    // ── Load and position Live2D model ────────────────────────────────────────
+    const model = await PIXI.live2d.Live2DModel.from(MODEL_PATH, {
+      autoInteract: false,
+    });
+
+    app.stage.addChild(model);
+
+    const scale = Math.min(
+      1080 / model.internalModel.originalWidth,
+      1920 / model.internalModel.originalHeight
+    ) * 0.92;
+    model.scale.set(scale);
+    model.x = 1080 / 2;
+    model.y = 1920 / 2;
+    model.anchor.set(0.5, 0.5);
+
+    // Start idle animation
+    model.motion('Idle');
+
+    // ── Fixed time-step animation control ────────────────────────────────────
+    const sharedTicker = PIXI.Ticker.shared;
+    sharedTicker.stop();
+    app.ticker.stop();
+
+    // Allow manual update() calls (internal pixi.js v6 flag).
+    sharedTicker._started = true;
+    app.ticker._started    = true;
+
+    // Virtual clock
+    let _vt = performance.now();
+
+    // Physics warm-up
+    const WARM_UP_FRAMES = 90;
+    const WARM_FPS       = 60;
+    const WARM_FRAME_MS  = 1000 / WARM_FPS;
+    for (let i = 0; i < WARM_UP_FRAMES; i++) {
+      _vt += WARM_FRAME_MS;
+      sharedTicker.update(_vt);
+    }
+    app.ticker.update(_vt);
+
+    // ── Expose API for Puppeteer ──────────────────────────────────────────────
+
+    /**
+     * Advance the animation by `ms` milliseconds.
+     * When speaking mode is active, animates the mouth open/close parameter
+     * to simulate lip sync.
+     */
+    window.advanceFrame = function (ms) {
+      // Lip sync: oscillate ParamMouthOpenY while speaking
+      if (window._speaking) {
+        window._speakPhase += ms * 0.003; // ~0.003 rad/ms → ~2 Hz at 60 fps (0.003×16.67≈0.05 rad/frame; π/0.05≈63 frames/half-cycle → ~2 Hz)
+        const openAmt = Math.max(0, Math.sin(window._speakPhase * Math.PI)) * 0.9;
+        try {
+          model.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', openAmt);
+        } catch (_) {}
+      } else {
+        // Close mouth when not speaking
+        try {
+          model.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', 0);
+        } catch (_) {}
+      }
+
+      _vt += ms;
+      sharedTicker.update(_vt);
+      app.ticker.update(_vt);
+    };
+
+    /**
+     * Enable or disable speaking (lip-sync) mode.
+     * @param {boolean} val
+     */
+    window.setSpeaking = function (val) {
+      window._speaking    = Boolean(val);
+      window._speakPhase  = 0;
+    };
+
+    /**
+     * Trigger a named motion group.
+     * @param {string}  group       - e.g. 'Wave', 'Idle', 'Tap', 'Flick', 'FlickUp'
+     * @param {number}  [motionIdx] - index within the group (default 0)
+     */
+    window.triggerMotion = function (group, motionIdx) {
+      try {
+        model.motion(group, motionIdx == null ? undefined : motionIdx);
+      } catch (e) {
+        console.warn('[v2] triggerMotion error:', e);
+      }
+    };
+
+    /**
+     * Receive the motion schedule from Puppeteer.
+     * @param {Array<{frameIndex: number, group: string, motionIndex: number}>} schedule
+     */
+    window.setMotionSchedule = function (schedule) {
+      window._motionSchedule = schedule || [];
+    };
+
+    window.modelReady = true;
+  } catch (err) {
+    window.modelError = err.message || String(err);
+    console.error('Live2D v2 init error:', err);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
