@@ -221,3 +221,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! Did you notice everyone’s desk suddenly looks magical? It’s because mood lamps are everywhere right now! Tiny sunset lamps, little mushroom lights, squishy egg glows—they turn a n… |
 
 ---
+
+## 2026:04:15 17-16-05 UTC [original-vtuber-repo-v3]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Jellycat Bag Charms Are Suddenly Everywhere! #Shorts |
+| **Video** | [videos/2026-04-15_17-16-05.mp4](videos/2026-04-15_17-16-05.mp4) |
+| **Metadata** | [videos/2026-04-15_17-16-05.json](videos/2026-04-15_17-16-05.json) |
+| **Status** | ✅ Saved to repository (v3) |
+| **Script preview** | Hi hi! Miku here! 💙 Okay, new cute trend alert: Jellycat bag charms! Tiny plushies are popping up on totes, backpacks, and even work bags like little emotional support buddies. People love them bec… |
+
+---
