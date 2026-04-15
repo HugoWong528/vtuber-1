@@ -170,3 +170,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! Have you noticed everyone’s bags suddenly have... tiny roommates? It’s the bag charm craze, and honestly, I get it. One plushie says, “I’m cute.” Five charms say, “I have lore.” P… |
 
 ---
+
+## 2026:04:15 07-21-43 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Color-Changing Lemon8 Nails Are Everywhere #Shorts |
+| **Video** | [videos/2026-04-15_07-21-43.mp4](videos/2026-04-15_07-21-43.mp4) |
+| **Metadata** | [videos/2026-04-15_07-21-43.json](videos/2026-04-15_07-21-43.json) |
+| **YouTube** | [https://youtu.be/uKU4MiyrvSE](https://youtu.be/uKU4MiyrvSE) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, it’s Miku! Today’s tiny trend report: color-changing Lemon8 nails! These lemony yellow nails use thermochrome polish, so they shift shade when your hands get warm or cold. It’s basically moo… |
+
+---
