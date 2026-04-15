@@ -183,3 +183,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, it’s Miku! Today’s tiny trend report: color-changing Lemon8 nails! These lemony yellow nails use thermochrome polish, so they shift shade when your hands get warm or cold. It’s basically moo… |
 
 ---
+
+## 2026:04:15 11-32-33 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Labubu Blind Boxes Are Everywhere Right Now! #Shorts |
+| **Video** | [videos/2026-04-15_11-32-33.mp4](videos/2026-04-15_11-32-33.mp4) |
+| **Metadata** | [videos/2026-04-15_11-32-33.json](videos/2026-04-15_11-32-33.json) |
+| **YouTube** | [https://youtu.be/0jL5UUJmaJ4](https://youtu.be/0jL5UUJmaJ4) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here—and yes, I finally understand the Labubu obsession! These little creatures are blowing up because they’re cute, chaotic, and totally collectible. First, the blind box surprise make… |
+
+---
