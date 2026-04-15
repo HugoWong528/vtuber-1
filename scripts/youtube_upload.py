@@ -139,6 +139,9 @@ def get_authenticated_service(
         logger.info("Loading credentials from %s", resolved_token)
         with resolved_token.open("rb") as fh:
             credentials = pickle.load(fh)  # noqa: S301
+    else:
+        # Explicit path didn't exist — clear so we don't try to write back later
+        resolved_token = None
 
     if credentials and credentials.valid:
         return build("youtube", "v3", credentials=credentials)
@@ -159,8 +162,12 @@ def get_authenticated_service(
 
     # 3. Interactive OAuth with client_secrets.json (fallback)
     resolved_secrets = (
-        Path(client_secrets_path) if client_secrets_path else _resolve_file("client_secrets.json", extra_dirs)
+        Path(client_secrets_path) if client_secrets_path else None
     )
+    if resolved_secrets and not resolved_secrets.exists():
+        resolved_secrets = None
+    if resolved_secrets is None:
+        resolved_secrets = _resolve_file("client_secrets.json", extra_dirs)
     if resolved_secrets is None:
         raise FileNotFoundError(
             "No YouTube credentials found: token.pickle, env vars, or client_secrets.json"
