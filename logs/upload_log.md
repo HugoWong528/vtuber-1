@@ -157,3 +157,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! What if the next big monster trend was... desk kaiju? Imagine a tiny kaiju made of sticky notes, charging through a keyboard city, while a stapler transforms into the final boss! … |
 
 ---
+
+## 2026:04:15 02-42-43 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | The Tiny Bag Charm Craze Is Weirdly Adorable #Shorts |
+| **Video** | [videos/2026-04-15_02-42-43.mp4](videos/2026-04-15_02-42-43.mp4) |
+| **Metadata** | [videos/2026-04-15_02-42-43.json](videos/2026-04-15_02-42-43.json) |
+| **YouTube** | [https://youtu.be/Mg2Ragjhcfs](https://youtu.be/Mg2Ragjhcfs) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here! Have you noticed everyone’s bags suddenly have... tiny roommates? It’s the bag charm craze, and honestly, I get it. One plushie says, “I’m cute.” Five charms say, “I have lore.” P… |
+
+---
