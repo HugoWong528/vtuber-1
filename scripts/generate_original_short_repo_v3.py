@@ -167,6 +167,7 @@ _MOTION_GROUPS = {
 }
 
 _MIN_FRAMES_BETWEEN_CUES = 45  # ~1.9 s at 24 fps
+_NO_PREVIOUS_FRAME = -9999     # sentinel: no prior cue for this group
 
 SYSTEM_PROMPT_TEMPLATE = textwrap.dedent("""\
     You are a cheerful VTuber named Miku (Hatsune Miku). You create short,
@@ -257,7 +258,7 @@ def _validate_motion_cues(cues: list, total_frames: int) -> list[dict]:
             continue
         fi = max(0, min(int(item.get("frameIndex", 0)), total_frames - 1))
         mi = max(0, min(int(item.get("motionIndex", 0)), _MOTION_GROUPS[group]["max_index"]))
-        if fi - last_frame_by_group.get(group, -9999) < _MIN_FRAMES_BETWEEN_CUES:
+        if fi - last_frame_by_group.get(group, _NO_PREVIOUS_FRAME) < _MIN_FRAMES_BETWEEN_CUES:
             continue
         cleaned.append({"frameIndex": fi, "group": group, "motionIndex": mi})
         last_frame_by_group[group] = fi
@@ -296,7 +297,7 @@ def _generate_motion_cues_keyword(script: str, duration: float, fps: int) -> lis
 
     def _add_cue(frame_idx: int, group: str, motion_idx: int = 0) -> bool:
         fi = max(0, frame_idx)
-        if fi - last_frame_by_group.get(group, -9999) < _MIN_FRAMES_BETWEEN_CUES:
+        if fi - last_frame_by_group.get(group, _NO_PREVIOUS_FRAME) < _MIN_FRAMES_BETWEEN_CUES:
             return False
         cues.append({"frameIndex": fi, "group": group, "motionIndex": motion_idx})
         last_frame_by_group[group] = fi
@@ -305,7 +306,7 @@ def _generate_motion_cues_keyword(script: str, duration: float, fps: int) -> lis
     def _alt() -> int:
         return len(cues) % 2
 
-    last_non_idle_frame = -9999
+    last_non_idle_frame = _NO_PREVIOUS_FRAME
     idle_interval_frames = int(fps * 8)
 
     for word_idx, word in enumerate(words):
