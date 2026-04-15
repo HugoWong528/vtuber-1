@@ -5,12 +5,14 @@ YouTube Upload Helper
 Provides OAuth 2.0 authentication and video upload for the YouTube Data API v3.
 
 Authentication modes (tried in order):
-  1. **Service-account style / token refresh** – If the environment variables
+  1. **token.pickle** – If a ``token.pickle`` file exists (in the provided
+     path, the working directory, or the repository root) it is loaded and
+     refreshed automatically.  When refreshing an expired token also requires
+     ``client_secrets.json``, the same search order is used.
+  2. **Service-account style / token refresh** – If the environment variables
      ``YOUTUBE_CLIENT_ID``, ``YOUTUBE_CLIENT_SECRET``, and
      ``YOUTUBE_REFRESH_TOKEN`` are set, a credential is built directly from
      the refresh token (no browser required — ideal for CI).
-  2. **token.pickle** – If a ``token.pickle`` file exists in the working
-     directory it is loaded and refreshed automatically.
   3. **Interactive OAuth** – Falls back to ``InstalledAppFlow`` with
      ``client_secrets.json`` (requires a browser; not suitable for CI).
 """
@@ -90,30 +92,85 @@ def _credentials_from_env() -> Credentials | None:
     return creds
 
 
-def get_authenticated_service():
+def _resolve_file(filename: str, extra_dirs: list[Path] | None = None) -> Path | None:
+    """Return the first existing path for *filename* in several locations."""
+    candidates: list[Path] = []
+    if extra_dirs:
+        candidates.extend(d / filename for d in extra_dirs)
+    candidates.append(Path(filename))  # CWD
+    # Also try the repository root (parent of this script's directory).
+    repo_root = Path(__file__).resolve().parent.parent
+    candidates.append(repo_root / filename)
+    for p in candidates:
+        if p.exists():
+            return p
+    return None
+
+
+def get_authenticated_service(
+    token_pickle_path: str | Path | None = None,
+    client_secrets_path: str | Path | None = None,
+):
     """Return an authorised YouTube Data API v3 service object.
 
-    Tries environment-variable credentials first (for CI), then
-    ``token.pickle``, then interactive OAuth.
+    Tries ``token.pickle`` first (file-based auth), then environment-variable
+    credentials (for CI), then interactive OAuth with ``client_secrets.json``.
+
+    Parameters
+    ----------
+    token_pickle_path:
+        Explicit path to ``token.pickle``.  When *None* the file is searched
+        in the current working directory and the repository root.
+    client_secrets_path:
+        Explicit path to ``client_secrets.json``.  Same search logic.
     """
-    credentials = _credentials_from_env()
+    extra_dirs: list[Path] = []
+    if token_pickle_path is not None:
+        extra_dirs.append(Path(token_pickle_path).parent)
+    if client_secrets_path is not None:
+        extra_dirs.append(Path(client_secrets_path).parent)
 
-    if credentials is None:
-        token_path = Path("token.pickle")
-        if token_path.exists():
-            with token_path.open("rb") as fh:
-                credentials = pickle.load(fh)  # noqa: S301
+    # 1. Try token.pickle (file-based auth — works with repo-committed files)
+    credentials = None
+    resolved_token = (
+        Path(token_pickle_path) if token_pickle_path else _resolve_file("token.pickle", extra_dirs)
+    )
+    if resolved_token and resolved_token.exists():
+        logger.info("Loading credentials from %s", resolved_token)
+        with resolved_token.open("rb") as fh:
+            credentials = pickle.load(fh)  # noqa: S301
 
-        if not credentials or not credentials.valid:
-            if credentials and credentials.expired and credentials.refresh_token:
-                credentials.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    "client_secrets.json", SCOPES
-                )
-                credentials = flow.run_local_server(port=0)
-            with token_path.open("wb") as fh:
+    if credentials and credentials.valid:
+        return build("youtube", "v3", credentials=credentials)
+
+    if credentials and credentials.expired and credentials.refresh_token:
+        logger.info("Refreshing expired token …")
+        credentials.refresh(Request())
+        # Persist the refreshed token back to the same file.
+        if resolved_token:
+            with resolved_token.open("wb") as fh:
                 pickle.dump(credentials, fh)
+        return build("youtube", "v3", credentials=credentials)
+
+    # 2. Try environment-variable credentials (CI-friendly)
+    credentials = _credentials_from_env()
+    if credentials is not None:
+        return build("youtube", "v3", credentials=credentials)
+
+    # 3. Interactive OAuth with client_secrets.json (fallback)
+    resolved_secrets = (
+        Path(client_secrets_path) if client_secrets_path else _resolve_file("client_secrets.json", extra_dirs)
+    )
+    if resolved_secrets is None:
+        raise FileNotFoundError(
+            "No YouTube credentials found: token.pickle, env vars, or client_secrets.json"
+        )
+    flow = InstalledAppFlow.from_client_secrets_file(str(resolved_secrets), SCOPES)
+    credentials = flow.run_local_server(port=0)
+    # Save for next run
+    save_path = resolved_token or Path("token.pickle")
+    with save_path.open("wb") as fh:
+        pickle.dump(credentials, fh)
 
     return build("youtube", "v3", credentials=credentials)
 
@@ -128,6 +185,8 @@ def upload_to_youtube(
     description: str,
     tags: list[str] | None = None,
     category_id: str = "27",
+    token_pickle_path: str | Path | None = None,
+    client_secrets_path: str | Path | None = None,
 ) -> str:
     """Upload a video to YouTube and return the video ID.
 
@@ -143,13 +202,20 @@ def upload_to_youtube(
         Optional list of tags. Defaults to ``["AI", "VTuber", "Automation"]``.
     category_id:
         YouTube category ID.  ``"27"`` = Education.
+    token_pickle_path:
+        Explicit path to ``token.pickle`` (optional).
+    client_secrets_path:
+        Explicit path to ``client_secrets.json`` (optional).
 
     Returns
     -------
     str
         The YouTube video ID.
     """
-    youtube = get_authenticated_service()
+    youtube = get_authenticated_service(
+        token_pickle_path=token_pickle_path,
+        client_secrets_path=client_secrets_path,
+    )
 
     body = {
         "snippet": {

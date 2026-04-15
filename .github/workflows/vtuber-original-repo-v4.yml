@@ -88,7 +88,8 @@ jobs:
         env:
           POLLINATIONS_API_KEY: ${{ secrets.POLLINATIONS_API_KEY }}
           CUSTOM_TOPIC: ${{ inputs.custom_topic }}
-          # YouTube Data API credentials (optional — upload is skipped if missing)
+          # YouTube Data API credentials (optional — only needed if
+          # client_secrets.json and token.pickle are NOT in the repo root)
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}

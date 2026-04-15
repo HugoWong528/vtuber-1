@@ -29,9 +29,14 @@ Available motion groups in the Miku model:
 
 Required GitHub Secrets:
   POLLINATIONS_API_KEY     – from https://enter.pollinations.ai
-  YOUTUBE_CLIENT_ID        – Google OAuth 2.0 client ID
-  YOUTUBE_CLIENT_SECRET    – Google OAuth 2.0 client secret
-  YOUTUBE_REFRESH_TOKEN    – OAuth 2.0 refresh token (youtube.upload scope)
+
+YouTube upload (at least one of the following):
+  Option A (recommended): commit ``client_secrets.json`` and ``token.pickle``
+    to the repository root — no secrets needed.
+  Option B: set all three secrets below:
+    YOUTUBE_CLIENT_ID        – Google OAuth 2.0 client ID
+    YOUTUBE_CLIENT_SECRET    – Google OAuth 2.0 client secret
+    YOUTUBE_REFRESH_TOKEN    – OAuth 2.0 refresh token (youtube.upload scope)
 """
 
 import json
@@ -802,7 +807,17 @@ def write_log_entry(
 
 
 def _youtube_credentials_available() -> bool:
-    """Return True if YouTube OAuth credentials are configured."""
+    """Return True if YouTube OAuth credentials are configured.
+
+    Checks for repo-committed ``token.pickle`` / ``client_secrets.json``
+    **or** environment variables.
+    """
+    # File-based credentials in the repository root
+    if (REPO_ROOT / "token.pickle").exists():
+        return True
+    if (REPO_ROOT / "client_secrets.json").exists():
+        return True
+    # Environment-variable credentials (CI)
     return bool(
         os.environ.get("YOUTUBE_CLIENT_ID")
         and os.environ.get("YOUTUBE_CLIENT_SECRET")
@@ -821,8 +836,9 @@ def try_upload_to_youtube(
     """
     if not _youtube_credentials_available():
         print("[YouTube] Credentials not configured — skipping upload.")
-        print("[YouTube] Set YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, and "
-              "YOUTUBE_REFRESH_TOKEN to enable.")
+        print("[YouTube] Add token.pickle / client_secrets.json to the repo "
+              "root, or set YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, and "
+              "YOUTUBE_REFRESH_TOKEN environment variables.")
         return None
 
     try:
@@ -832,6 +848,8 @@ def try_upload_to_youtube(
             title=content.get("title", "VTuber Short"),
             description=content.get("description", ""),
             tags=content.get("tags"),
+            token_pickle_path=REPO_ROOT / "token.pickle",
+            client_secrets_path=REPO_ROOT / "client_secrets.json",
         )
         print(f"[YouTube] ✓ Uploaded — https://youtu.be/{video_id}")
         return video_id
