@@ -208,3 +208,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:15 16-51-57 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Everyone’s Obsessed With Mood Lamps Right Now! #Shorts |
+| **Video** | [videos/2026-04-15_16-51-57.mp4](videos/2026-04-15_16-51-57.mp4) |
+| **Metadata** | [videos/2026-04-15_16-51-57.json](videos/2026-04-15_16-51-57.json) |
+| **YouTube** | [https://youtu.be/SpJ_nr8J8OQ](https://youtu.be/SpJ_nr8J8OQ) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here! Did you notice everyone’s desk suddenly looks magical? It’s because mood lamps are everywhere right now! Tiny sunset lamps, little mushroom lights, squishy egg glows—they turn a n… |
+
+---
