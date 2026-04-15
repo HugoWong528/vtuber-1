@@ -6,11 +6,14 @@
   <title>Miku VTuber Controller</title>
 
   <!-- Load Cubism 4 Core first (required by pixi-live2d-display) -->
-  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
-  <!-- PIXI.js v6 -->
-  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6/dist/browser/pixi.min.js"></script>
+  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"
+          onerror="document.getElementById('status').textContent='❌ Failed to load Cubism Core SDK (CDN may be down)'"></script>
+  <!-- PIXI.js v6 (pinned to 6.5.10 for compatibility) -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js"
+          onerror="document.getElementById('status').textContent='❌ Failed to load PIXI.js'"></script>
   <!-- pixi-live2d-display: cubism4-only build (no Cubism 2 runtime needed) -->
-  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/cubism4.min.js"
+          onerror="document.getElementById('status').textContent='❌ Failed to load pixi-live2d-display'"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -539,6 +542,16 @@ function syncSliders() {
 
 // ── Main init ───────────────────────────────────────────────────────────────
 async function init() {
+  // Guard: if CDN scripts failed to load, show an error and bail out
+  if (typeof PIXI === 'undefined') {
+    setStatus('❌ PIXI.js failed to load — check your network or ad-blocker');
+    return;
+  }
+  if (typeof PIXI.live2d === 'undefined') {
+    setStatus('❌ pixi-live2d-display failed to load — Cubism Core SDK may be missing');
+    return;
+  }
+
   const wrap = document.getElementById('canvas-wrap');
   const canvas = document.getElementById('canvas');
 
@@ -589,8 +602,9 @@ function positionModel() {
   if (!model) return;
   const sw = app.screen.width;
   const sh = app.screen.height;
+  // currentScale (slider, default 1.3) is the only zoom factor
   const scale = Math.min(sw / model.internalModel.originalWidth,
-                         sh / model.internalModel.originalHeight) * 1.3 * currentScale;
+                         sh / model.internalModel.originalHeight) * currentScale;
   model.scale.set(scale);
   model.x = sw / 2;
   model.y = sh / 2;
@@ -762,7 +776,7 @@ function installEnhancedAnimation() {
         try {
           const idx = core.getParameterIndex('ParamMouthOpenY');
           return idx >= 0 ? core.getParameterValueByIndex(idx) : 0;
-        } catch { return 0; }
+        } catch (_e) { return 0; }
       })();
       const combined = Math.max(0, Math.min(1, existing + Math.max(0, breath)));
       core.setParameterValueById('ParamMouthOpenY', combined);
