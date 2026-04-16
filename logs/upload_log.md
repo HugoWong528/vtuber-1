@@ -245,3 +245,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:16 17-02-31 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Capri Sun Tumblers Are Suddenly Everywhere! #Shorts |
+| **Video** | [videos/2026-04-16_17-02-31.mp4](videos/2026-04-16_17-02-31.mp4) |
+| **Metadata** | [videos/2026-04-16_17-02-31.json](videos/2026-04-16_17-02-31.json) |
+| **YouTube** | [https://youtu.be/6CYufbqQKrE](https://youtu.be/6CYufbqQKrE) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, Miku here! Why are Capri Sun tumblers suddenly everywhere? Because they’re pure nostalgia bait—in the cutest way possible! They look like the juice pouches we grew up with, but now they’re g… |
+
+---
