@@ -258,3 +258,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, Miku here! Why are Capri Sun tumblers suddenly everywhere? Because they’re pure nostalgia bait—in the cutest way possible! They look like the juice pouches we grew up with, but now they’re g… |
 
 ---
+
+## 2026:04:16 17-25-14 UTC [original-vtuber-repo-v3]
+
+| Field | Value |
+|---|---|
+| **Title** | Why DIY Decoden Phone Cases Are Exploding Again! #Shorts |
+| **Video** | [videos/2026-04-16_17-25-14.mp4](videos/2026-04-16_17-25-14.mp4) |
+| **Metadata** | [videos/2026-04-16_17-25-14.json](videos/2026-04-16_17-25-14.json) |
+| **Status** | ✅ Saved to repository (v3) |
+| **Script preview** | Hi hi! Miku here~ Did you notice DIY Decoden phone cases are exploding again? They’re those super extra cases covered in fake whipped cream, bows, pearls, fruit charms, even tiny characters! It’s g… |
+
+---
