@@ -233,3 +233,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! 💙 Okay, new cute trend alert: Jellycat bag charms! Tiny plushies are popping up on totes, backpacks, and even work bags like little emotional support buddies. People love them bec… |
 
 ---
+
+## 2026:04:16 16-25-24 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-16_16-25-24.mp4](videos/2026-04-16_16-25-24.mp4) |
+| **Metadata** | [videos/2026-04-16_16-25-24.json](videos/2026-04-16_16-25-24.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
