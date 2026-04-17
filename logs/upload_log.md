@@ -295,3 +295,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here~ Have you seen those Pop Mart Crybaby clips everywhere? They’re trending because they’re tiny, dramatic, and weirdly adorable. You get a little sobbing face, plushy outfit vibes, a… |
 
 ---
+
+## 2026:04:17 17-02-28 UTC [original-vtuber-repo-v3]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Smiski Hippers Are Clinging to Everything! #Shorts |
+| **Video** | [videos/2026-04-17_17-02-28.mp4](videos/2026-04-17_17-02-28.mp4) |
+| **Metadata** | [videos/2026-04-17_17-02-28.json](videos/2026-04-17_17-02-28.json) |
+| **Status** | ✅ Saved to repository (v3) |
+| **Script preview** | Hi hi, Miku here! Have you seen those tiny glowing creatures hanging off people’s screens lately? Those are Smiski Hippers! They’re little surprise figures that cling to the edge of your phone, lap… |
+
+---
