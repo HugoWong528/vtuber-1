@@ -282,3 +282,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:17 16-42-36 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Pop Mart Crybaby Clips Are Blowing Up Right Now! #Shorts |
+| **Video** | [videos/2026-04-17_16-42-36.mp4](videos/2026-04-17_16-42-36.mp4) |
+| **Metadata** | [videos/2026-04-17_16-42-36.json](videos/2026-04-17_16-42-36.json) |
+| **YouTube** | [https://youtu.be/wSQ03iwbC2E](https://youtu.be/wSQ03iwbC2E) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here~ Have you seen those Pop Mart Crybaby clips everywhere? They’re trending because they’re tiny, dramatic, and weirdly adorable. You get a little sobbing face, plushy outfit vibes, a… |
+
+---
