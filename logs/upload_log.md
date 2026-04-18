@@ -307,3 +307,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, Miku here! Have you seen those tiny glowing creatures hanging off people’s screens lately? Those are Smiski Hippers! They’re little surprise figures that cling to the edge of your phone, lap… |
 
 ---
+
+## 2026:04:18 15-39-13 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-18_15-39-13.mp4](videos/2026-04-18_15-39-13.mp4) |
+| **Metadata** | [videos/2026-04-18_15-39-13.json](videos/2026-04-18_15-39-13.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
