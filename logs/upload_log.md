@@ -319,3 +319,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:18 16-27-11 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | I Tried Turbo-Thunder Hologram Stickers… They’re So Satisfying #Shorts |
+| **Video** | [videos/2026-04-18_16-27-11.mp4](videos/2026-04-18_16-27-11.mp4) |
+| **Metadata** | [videos/2026-04-18_16-27-11.json](videos/2026-04-18_16-27-11.json) |
+| **YouTube** | [https://youtu.be/vNaN16gly9A](https://youtu.be/vNaN16gly9A) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here! Today we’re doing a turbo-thunder hologram test—on purpose, not by accident! ⚡✨  Step one: I stick one hologram sticker onto this plain phone case… and—okay, it already sparkles! … |
+
+---
