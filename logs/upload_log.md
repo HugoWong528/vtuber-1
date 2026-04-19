@@ -344,3 +344,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, Miku here! 💙 Okay, why are mini photo printers everywhere again? Because they make your life feel instantly cuter. You snap a blurry café pic, print it in seconds, and boom—now it’s a journa… |
 
 ---
+
+## 2026:04:19 16-26-49 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Matcha Cloud Lattes Are Blowing Up Right Now! #Shorts |
+| **Video** | [videos/2026-04-19_16-26-49.mp4](videos/2026-04-19_16-26-49.mp4) |
+| **Metadata** | [videos/2026-04-19_16-26-49.json](videos/2026-04-19_16-26-49.json) |
+| **YouTube** | [https://youtu.be/ThGBJ5ambdU](https://youtu.be/ThGBJ5ambdU) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, I’m Miku! Have you noticed matcha cloud lattes everywhere lately? They’re basically super smooth matcha with this fluffy foam on top that looks like a tiny edible cloud! The reason they’re b… |
+
+---
