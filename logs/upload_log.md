@@ -357,3 +357,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, I’m Miku! Have you noticed matcha cloud lattes everywhere lately? They’re basically super smooth matcha with this fluffy foam on top that looks like a tiny edible cloud! The reason they’re b… |
 
 ---
+
+## 2026:04:20 16-12-46 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-20_16-12-46.mp4](videos/2026-04-20_16-12-46.mp4) |
+| **Metadata** | [videos/2026-04-20_16-12-46.json](videos/2026-04-20_16-12-46.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
