@@ -369,3 +369,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:20 16-53-00 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Sonny Angel Phone Stands Are Suddenly Everywhere! #Shorts |
+| **Video** | [videos/2026-04-20_16-53-00.mp4](videos/2026-04-20_16-53-00.mp4) |
+| **Metadata** | [videos/2026-04-20_16-53-00.json](videos/2026-04-20_16-53-00.json) |
+| **YouTube** | [https://youtu.be/F-e1xpLrW9g](https://youtu.be/F-e1xpLrW9g) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here! 💙 Okay, why are Sonny Angel phone stands suddenly everywhere? Because they’re tiny, silly, and dangerously cute! Imagine your phone being held up by a little angel baby like it’s … |
+
+---
