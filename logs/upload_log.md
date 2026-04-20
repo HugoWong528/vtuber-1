@@ -382,3 +382,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! 💙 Okay, why are Sonny Angel phone stands suddenly everywhere? Because they’re tiny, silly, and dangerously cute! Imagine your phone being held up by a little angel baby like it’s … |
 
 ---
+
+## 2026:04:20 17-17-13 UTC [original-vtuber-repo-v3]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Gudetama Toast Art Is Weirdly Taking Over! #Shorts |
+| **Video** | [videos/2026-04-20_17-17-13.mp4](videos/2026-04-20_17-17-13.mp4) |
+| **Metadata** | [videos/2026-04-20_17-17-13.json](videos/2026-04-20_17-17-13.json) |
+| **Status** | ✅ Saved to repository (v3) |
+| **Script preview** | Hi hi, Miku here! Did you see this super cute trend? People are making Gudetama toast art, and it’s hilarious. Imagine a sleepy little egg yolk face on toast made with mayo, jam, cheese, or seaweed… |
+
+---
