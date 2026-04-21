@@ -419,3 +419,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here~ Have you seen those frog cake clips hopping all over the internet? They look like tiny frosted cakes… with little frog faces on top. I know. Peak chaos. But that’s why they work! … |
 
 ---
+
+## 2026:04:21 17-14-39 UTC [original-vtuber-repo-v3]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Sakura Projection Lamps Are Blooming Everywhere! #Shorts |
+| **Video** | [videos/2026-04-21_17-14-39.mp4](videos/2026-04-21_17-14-39.mp4) |
+| **Metadata** | [videos/2026-04-21_17-14-39.json](videos/2026-04-21_17-14-39.json) |
+| **Status** | ✅ Saved to repository (v3) |
+| **Script preview** | Hi hi! Miku here! 🌸 Okay, why are sakura projection lamps suddenly everywhere? Because they make your room look like a cherry blossom dream in, like, two seconds! One little lamp and boom—pink peta… |
+
+---
