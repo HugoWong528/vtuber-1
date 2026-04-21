@@ -406,3 +406,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:21 16-51-55 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Frog Cake Clips Are Hopping Everywhere Right Now! #Shorts |
+| **Video** | [videos/2026-04-21_16-51-55.mp4](videos/2026-04-21_16-51-55.mp4) |
+| **Metadata** | [videos/2026-04-21_16-51-55.json](videos/2026-04-21_16-51-55.json) |
+| **YouTube** | [https://youtu.be/a8vto5E4eDM](https://youtu.be/a8vto5E4eDM) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here~ Have you seen those frog cake clips hopping all over the internet? They look like tiny frosted cakes… with little frog faces on top. I know. Peak chaos. But that’s why they work! … |
+
+---
