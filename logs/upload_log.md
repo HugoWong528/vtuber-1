@@ -431,3 +431,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi! Miku here! 🌸 Okay, why are sakura projection lamps suddenly everywhere? Because they make your room look like a cherry blossom dream in, like, two seconds! One little lamp and boom—pink peta… |
 
 ---
+
+## 2026:04:22 16-52-09 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Tamagotchi Uni Parties Are Popping Off Again! #Shorts |
+| **Video** | [videos/2026-04-22_16-52-09.mp4](videos/2026-04-22_16-52-09.mp4) |
+| **Metadata** | [videos/2026-04-22_16-52-09.json](videos/2026-04-22_16-52-09.json) |
+| **YouTube** | [https://youtu.be/mimApcTv6Dw](https://youtu.be/mimApcTv6Dw) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, it’s Miku! Why is Tamagotchi Uni suddenly all over everyone’s feed again? Because tiny digital pets now feel weirdly social. People are hosting cute character meetups, comparing outfits and … |
+
+---
