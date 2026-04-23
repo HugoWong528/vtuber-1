@@ -468,3 +468,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:23 17-09-17 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Nebula Projectors Are Turning Rooms Into Space Dreams! #Shorts |
+| **Video** | [videos/2026-04-23_17-09-17.mp4](videos/2026-04-23_17-09-17.mp4) |
+| **Metadata** | [videos/2026-04-23_17-09-17.json](videos/2026-04-23_17-09-17.json) |
+| **YouTube** | [https://youtu.be/7Ps2x5JsWlM](https://youtu.be/7Ps2x5JsWlM) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, it’s Miku! Have you noticed nebula projectors are everywhere right now? They turn a plain wall into a glowing galaxy in, like, two seconds. That’s why people love them—they’re cozy, dramatic… |
+
+---
