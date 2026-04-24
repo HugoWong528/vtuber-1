@@ -493,3 +493,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hi hi, I’m Miku! Have you noticed meteor shower alarm apps are suddenly getting super popular? Instead of randomly looking up at the sky and hoping for sparkle luck, these apps tell you when the be… |
 
 ---
+
+## 2026:04:24 16-07-32 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-24_16-07-32.mp4](videos/2026-04-24_16-07-32.mp4) |
+| **Metadata** | [videos/2026-04-24_16-07-32.json](videos/2026-04-24_16-07-32.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
