@@ -529,3 +529,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:27 17-14-41 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | The Holo-Eclipse Blizzard Hack You Can Make in 30 Seconds! #Shorts |
+| **Video** | [videos/2026-04-27_17-14-41.mp4](videos/2026-04-27_17-14-41.mp4) |
+| **Metadata** | [videos/2026-04-27_17-14-41.json](videos/2026-04-27_17-14-41.json) |
+| **YouTube** | [https://youtu.be/feup5GNO6r0](https://youtu.be/feup5GNO6r0) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hey hey, it’s Miku! Today we’re making a “holo eclipse blizzard” effect—fast! ❄️✨  Grab a clear cup or plastic container. First, add a thin layer of white glitter or salt-like snow—just enough to l… |
+
+---
