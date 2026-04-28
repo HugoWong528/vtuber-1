@@ -542,3 +542,15 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hey hey, it’s Miku! Today we’re making a “holo eclipse blizzard” effect—fast! ❄️✨  Grab a clear cup or plastic container. First, add a thin layer of white glitter or salt-like snow—just enough to l… |
 
 ---
+
+## 2026:04:28 16-53-41 UTC [original-vtuber-repo-v2]
+
+| Field | Value |
+|---|---|
+| **Title** | I Let AI Pick My Anime Snack Combo!? #Shorts |
+| **Video** | [videos/2026-04-28_16-53-41.mp4](videos/2026-04-28_16-53-41.mp4) |
+| **Metadata** | [videos/2026-04-28_16-53-41.json](videos/2026-04-28_16-53-41.json) |
+| **Status** | ✅ Saved to repository (v2) |
+| **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
+
+---
