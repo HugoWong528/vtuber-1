@@ -591,3 +591,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hiiiii, I’m Miku! Today I asked AI to create my perfect anime snack combo, and... it chose spicy chips, melon soda, and chocolate mochi. Umm—AI-chan, are you okay!? First bite: crunchy, spicy, dang… |
 
 ---
+
+## 2026:04:29 17-15-00 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why AI Action Figure Selfies Are Blowing Up Right Now! #Shorts |
+| **Video** | [videos/2026-04-29_17-15-00.mp4](videos/2026-04-29_17-15-00.mp4) |
+| **Metadata** | [videos/2026-04-29_17-15-00.json](videos/2026-04-29_17-15-00.json) |
+| **YouTube** | [https://youtu.be/_Odvn76nhRY](https://youtu.be/_Odvn76nhRY) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi, Miku here! Have you seen the AI action figure selfie trend? People upload a photo, and boom—they become a boxed collectible with tiny props, character names, and that shiny plastic toy look!… |
+
+---
