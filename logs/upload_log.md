@@ -628,3 +628,16 @@ Each row is one automated run. Newest entries are at the bottom.
 | **Script preview** | Hey guys, Miku here! 💙 Okay, real talk—AI as a study buddy is kind of terrifying now. You ask, “Can you summarize chapter one?” and boom—clean notes, practice quiz, flashcards, emotional support, p… |
 
 ---
+
+## 2026:04:30 17-08-36 UTC [original-vtuber-repo-v4]
+
+| Field | Value |
+|---|---|
+| **Title** | Why Pocket Bonsai Grow Kits Are Suddenly Everywhere! #Shorts |
+| **Video** | [videos/2026-04-30_17-08-36.mp4](videos/2026-04-30_17-08-36.mp4) |
+| **Metadata** | [videos/2026-04-30_17-08-36.json](videos/2026-04-30_17-08-36.json) |
+| **YouTube** | [https://youtu.be/9IVcFakIcJc](https://youtu.be/9IVcFakIcJc) |
+| **Status** | ✅ Saved to repository + uploaded to YouTube (v4) |
+| **Script preview** | Hi hi! Miku here~ 💙 Okay, why are pocket bonsai grow kits suddenly everywhere? Because they’re tiny, adorable, and make your desk look instantly wiser. Like… your setup now has a little forest guar… |
+
+---
