@@ -1,0 +1,94 @@
+{
+  "title": "Why DIY Sticker Peel Videos Are Weirdly Addictive! #Shorts",
+  "description": "Okay, why is watching someone slowly peel a giant sticker SO satisfying? ✨📦\n\nDIY sticker peel videos are blowing up because they mix ASMR, cute design, and that perfect reveal at the end. It’s like tiny chaos turning into instant aesthetic therapy, and yes, I could watch ten in a row without blinking. 😭💖\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n✨ LIKE & SUBSCRIBE for daily VTuber content!\n🔔 Turn on notifications!\n💬 Comment below!\n━━━━━━━━━━━━━━━━━━━━━━━━\n\n#Shorts #VTuber #Anime #Miku #StickerPeel #ASMR #OddlySatisfying #DIYTrend #Aesthetic #CraftTok #CuteThings #PackagingDesign #SatisfyingVideos #TrendingNow #YouTubeShorts #Kawaii #CreativeTok #VisualASMR #PeelReveal",
+  "tags": [
+    "sticker peel",
+    "DIY sticker peel",
+    "sticker ASMR",
+    "oddly satisfying",
+    "satisfying videos",
+    "craft trend",
+    "aesthetic trend",
+    "VTuber",
+    "Hatsune Miku",
+    "Miku",
+    "anime shorts",
+    "YouTube Shorts",
+    "viral trend",
+    "packaging design",
+    "kawaii",
+    "crafttok",
+    "visual ASMR",
+    "peel reveal",
+    "cute DIY",
+    "short video",
+    "trending now",
+    "asmr shorts",
+    "satisfying reveal",
+    "creative trend"
+  ],
+  "script": "Hi hi, Miku here! Did you notice DIY sticker peel videos are suddenly everywhere? People layer huge glossy stickers over boxes, notebooks, even trays… then peel them back in one super clean motion. And somehow? My brain goes: yessss. It’s satisfying because you get the sticky sound, the slow tension, and then—bam!—a perfect reveal. It’s part ASMR, part craft magic, part tiny emotional reset. Also, the designs are so cute lately: cherries, retro stars, pixel hearts, sakura vibes—ahhh! If your For You page is full of sticker peeling too, tell me your favorite version. I might fall into this rabbit hole immediately!",
+  "music_prompt": "Upbeat cute electronic pop with soft plucks, glossy percussion, light ASMR-friendly texture, playful and crafty vibe.",
+  "_motion_cues": [
+    {
+      "frameIndex": 0,
+      "group": "Wave",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 58,
+      "group": "Tap",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 112,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 168,
+      "group": "Idle",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 226,
+      "group": "Flick",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 284,
+      "group": "Tap",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 342,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 404,
+      "group": "Idle",
+      "motionIndex": 2
+    },
+    {
+      "frameIndex": 468,
+      "group": "Flick",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 528,
+      "group": "Tap",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 588,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 654,
+      "group": "Idle",
+      "motionIndex": 0
+    }
+  ]
+}
