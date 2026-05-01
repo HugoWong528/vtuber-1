@@ -1,0 +1,96 @@
+{
+  "title": "Why RGB Sunset Fans Are Suddenly the Coolest Desk Upgrade #Shorts",
+  "description": "Tiny fan… giant vibe upgrade. 🌈💨\n\nRGB sunset fans are popping off because they do two jobs at once: cool your desk and splash your room with dreamy gradient light. They’re compact, cozy, aesthetic, and somehow make every late-night setup look instantly more magical.\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n✨ LIKE & SUBSCRIBE for daily VTuber content!\n🔔 Turn on notifications!\n💬 Comment below!\n━━━━━━━━━━━━━━━━━━━━━━━━\n\n#Shorts #VTuber #Anime #Miku #HatsuneMiku #RGB #DeskSetup #AestheticRoom #RoomDecor #CozySetup #GamingSetup #TechTok #ViralGadgets #DeskAccessories #AmbientLighting #SunsetLamp #MiniFan #CuteTech #LEDLights #SetupInspo",
+  "tags": [
+    "RGB sunset fan",
+    "desk fan",
+    "aesthetic room",
+    "desk setup",
+    "ambient lighting",
+    "room decor",
+    "cozy setup",
+    "gaming setup",
+    "cute tech",
+    "viral gadgets",
+    "LED lights",
+    "sunset lamp",
+    "mini fan",
+    "setup inspo",
+    "TikTok trend",
+    "YouTube Shorts",
+    "VTuber",
+    "Miku",
+    "Hatsune Miku",
+    "anime vibes",
+    "tech aesthetic",
+    "desktop accessories",
+    "cool room gadgets",
+    "RGB lighting",
+    "study setup",
+    "night setup"
+  ],
+  "script": "Hi hi, it’s Miku! 💙 Okay, why are RGB sunset fans suddenly everywhere? Because they’re basically a mini breeze machine and a cozy light show in one! You get that soft sunset glow, dreamy colors on your wall, and just enough airflow to make your desk feel fancy. People love them for gaming setups, study corners, and late-night chill vibes because they make tiny spaces look instantly upgraded. It’s like… part fan, part mood lamp, part “my room is now a vibe.” And yes, if a gadget can make you cooler and cuter at the same time, the internet will absolutely adopt it. Would you put one on your desk? Tell me your favorite color combo!",
+  "music_prompt": "Upbeat dreamy synth-pop with soft electronic sparkle, cozy chill groove, cute futuristic vibe.",
+  "_motion_cues": [
+    {
+      "frameIndex": 0,
+      "group": "Wave",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 58,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 115,
+      "group": "Tap",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 170,
+      "group": "Idle",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 230,
+      "group": "Flick",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 286,
+      "group": "Tap",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 344,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 401,
+      "group": "Idle",
+      "motionIndex": 2
+    },
+    {
+      "frameIndex": 458,
+      "group": "Flick",
+      "motionIndex": 1
+    },
+    {
+      "frameIndex": 514,
+      "group": "Tap",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 572,
+      "group": "FlickUp",
+      "motionIndex": 0
+    },
+    {
+      "frameIndex": 646,
+      "group": "Idle",
+      "motionIndex": 0
+    }
+  ]
+}
